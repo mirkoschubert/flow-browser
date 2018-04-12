@@ -3,21 +3,29 @@
   "version": "0.0.1",
   "main": "index.js",
   "bin": {
-    "flow": "index.js"
+    "fl": "index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": "https://github.com/mirkoschubert/flow-browser.git",
   "author": "Mirko Schubert <mirkoschubert@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^4.19.1"
+    "ava": "^0.25.0"
   },
   "dependencies": {
     "app-root-path": "^2.0.1",
     "blessed": "^0.1.81",
+    "blessed-contrib": "^4.8.5",
     "chalk": "^2.3.2",
     "commander": "^2.15.1",
+    "configstore": "^3.1.2",
+    "events": "^2.0.0",
     "fs-extra": "^5.0.0",
+    "inquirer": "^5.2.0",
     "moment": "^2.22.0",
-    "promise": "^8.0.1"
+    "promise": "^8.0.1",
+    "superagent": "^3.8.2"
   }
 }
