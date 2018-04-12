@@ -1,22 +1,21 @@
 #!/usr/bin/env node --harmony
 
 const pkg = require('./package.json');
-const app = require('commander');
-const blessed = require('blessed');
+const cli = require('commander');
 const configstore = require('configstore');
 
 const cfg = new configstore(pkg.name, {});
 
-app.version(pkg.version);
+cli.version(pkg.version);
 
-app
+cli
   .command('init')
   .description('Initializes the project')
   .action(() => {
     console.log('Initializing');
   });
 
-app.parse(process.argv);
-if (app.args.length === 0) {
+cli.parse(process.argv);
+if (cli.args.length === 0) {
   require('./lib/main');
 }
