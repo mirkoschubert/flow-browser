@@ -6,6 +6,11 @@ quit:
   command: ':quit'
   description: Closes the browser
   inmenu: true
+test:
+  keys: a
+  command: ':test'
+  description: Function test
+  inmenu: false
 open_url:
   keys: o
   command: ':open'
