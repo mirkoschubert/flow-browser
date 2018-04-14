@@ -1,0 +1,29 @@
+{
+  "quit": {
+    "keys": ["q", "Q", "C-c"],
+    "command": ":quit",
+    "description": "Closes the browser"
+  },
+  "open_url": {
+    "keys": "o",
+    "command": ":open",
+    "args": "url",
+    "description": "Opens a new url in the active tab"
+  },
+  "open_new_tab": {
+    "keys": "t",
+    "command": ":tab",
+    "args": "url",
+    "description": "Opens a new tab with a given url"
+  },
+  "close_active_tab": {
+    "keys": "x",
+    "command": ":close",
+    "description": "Closes the active tab"
+  },
+  "close_all_tabs": {
+    "keys": "X",
+    "command": ":closeall",
+    "description": "Closes all tabs and opens a new empty one"
+  }
+}

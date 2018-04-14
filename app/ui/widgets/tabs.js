@@ -17,11 +17,14 @@ class Tabs {
       autoCommandKeys: true,
       style: {
         fg: '#eee',
+        bg: '#25467a',
         item: {
-          fg: '#eee'
+          fg: '#eee',
+          bg: '#25467a'
         },
         selected: {
           fg: '#fff',
+          bg: '#25467a',
           bold: true
         }
       },

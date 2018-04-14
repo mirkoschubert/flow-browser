@@ -17,5 +17,5 @@ cli
 
 cli.parse(process.argv);
 if (cli.args.length === 0) {
-  require('./lib/main');
+  require('./app/main');
 }
