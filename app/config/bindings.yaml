@@ -1,0 +1,30 @@
+quit:
+  keys:
+    - q
+    - Q
+    - C-c
+  command: ':quit'
+  description: Closes the browser
+  inmenu: true
+open_url:
+  keys: o
+  command: ':open'
+  args: url
+  description: Opens a new url in the active tab
+  inmenu: true
+open_new_tab:
+  keys: t
+  command: ':tab'
+  args: url
+  description: Opens a new tab with a given url
+  inmenu: true
+close_active_tab:
+  keys: x
+  command: ':close'
+  description: Closes the active tab
+  inmenu: true
+close_all_tabs:
+  keys: X
+  command: ':closeall'
+  description: Closes all tabs and opens a new empty one
+  inmenu: false
