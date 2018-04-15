@@ -1,130 +1,34 @@
 const Blessed = require('blessed');
 const Screen = require('./screen');
+const UIElements = require('./ui-elements');
 
 class UI {
   constructor() {
     // Initialize all Widgets
-    this.boxes = this.initBoxes();
-    for (let box in this.boxes) {
-      Screen.append(this.boxes[box]);
-    }
-    Screen.render();
+    this.boxes = {};
+    this.currentTab = 0;
+    this.initBoxes();
+
+    this.newTab('google.com'); // first Tab
+    this.newTab('facebook.com');
   }
 
   initBoxes() {
-    let boxes = {};
-    // Header
-    boxes.header = Blessed.box({
-      parent: Screen,
-      top: 0,
-      height: 1,
-      width: '100%',
-      align: 'center',
-      padding: {
-        left: 2,
-        right: 2
-      },
-      style: {
-        bg: '#2d74da',
-        fg: '#fff',
-        bold: true
-      },
-      content: 'FLOW BROWSER'
-    });
-    // Tabs
-    boxes.tabs = Blessed.listbar({
-      parent: Screen,
-      top: 1,
-      height: 1,
-      width: '100%',
-      padding: {
-        left: 2,
-        right: 2
-      },
-      keys: true,
-      focusable: true,
-      autoCommandKeys: true,
-      style: {
-        fg: '#eee',
-        bg: '#25467a',
-        item: {
-          fg: '#eee',
-          bg: '#25467a'
-        },
-        selected: {
-          fg: '#fff',
-          bg: '#1f57a4',
-          bold: true
-        }
-      },
-      items: {
-        '1': 'blank'
-      }
-    });
-    // Webview
-    boxes.webview = Blessed.box({
-      parent: Screen,
-      top: 2,
-      height: '100%-4',
-      width: '100%',
-      align: 'left',
-      tags: true,
-      keys: true,
-      vi: true,
-      scrollable: true,
-      padding: {
-        top: 1,
-        bottom: 1,
-        left: 2,
-        right: 2
-      },
-      style: {
-        bg: 'transparent',
-        fg: '#fff',
-        focus: {
-          fg: '#fff'
-        },
-        scrollbars: {
-          bg: '#2d74da'
-        }
-      },
-      content: 'Testtext'
-    });
-    // Menu
-    boxes.menu = Blessed.box({
-      parent: Screen,
-      bottom: 1,
-      height: 1,
-      width: '100%',
-      tags: true,
-      padding: {
-        left: 2,
-        right: 2
-      },
-      style: {
-        bg: '#2d74da',
-        fg: '#fff',
-        bold: true
-      }
-    });
-    // Prompt
-    boxes.prompt = Blessed.textbox({
-      parent: Screen,
-      bottom: 0,
-      height: 1,
-      width: '100%',
-      tags: true,
-      keys: true,
-      padding: 0,
-      style: {
-        fg: '#fff',
-        focus: {
-          fg: '#ffffff'
-        }
-      }
-    });
+    this.boxes.header = UIElements.header(Screen, 'FLOW BROWSER');
+    this.boxes.tabs = UIElements.tabs(Screen);
+    this.boxes.webviews = [];
+    this.boxes.menu = UIElements.menu(Screen);
+    this.boxes.prompt = UIElements.prompt(Screen);
 
-    return boxes;
+    for (let box in this.boxes) {
+      if (box !== 'webviews') {
+        Screen.append(this.boxes[box]);
+      } else
+        for (let wv in this.boxes[box].webviews) {
+          Screen.append(this.boxes[box].webviews[wv]);
+        }
+    }
+    Screen.render();
   }
 
   setMenuCommands(commands) {
@@ -139,10 +43,31 @@ class UI {
   }
 
   // Sets a new Tab with a new buffer/ webview
-  newTab() {}
+  newTab(url) {
+    if (this.currentTab > 0) this.boxes.webviews[this.currentTab - 1].hide();
+    this.currentTab++;
+    this.boxes.webviews.push(
+      UIElements.webview(Screen, 'Tab ' + String(this.currentTab) + ' - ' + url)
+    );
+    this.boxes.tabs.addItem(url === '' ? 'blank' : url);
+    this.boxes.tabs.select(this.currentTab - 1);
+    Screen.render();
+    console.log('Current Tab: ', this.currentTab);
+  }
 
-  // closes a tab and destroys the buffer instance
-  destroyTab(instance) {}
+  switchTab(id) {
+    this.boxes.webviews[this.currentTab - 1].hide();
+    this.boxes.webviews[id].show();
+    this.boxes.tabs.select(id);
+    this.currentTab = id + 1;
+    Screen.render();
+  }
+
+  // closes active tab and destroys the buffer instance
+  closeTab(id) {
+    console.log(this.boxes.tabs.options);
+    this.boxes.tabs.removeItem(id);
+  }
 }
 
 module.exports = UI;

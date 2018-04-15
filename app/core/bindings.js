@@ -1,6 +1,6 @@
 const Screen = require('./screen');
 const Config = require('./config');
-const Func = require('./functions');
+//const Func = require('./functions');
 
 Screen.key(['C-c', 'q', 'Q'], () => {
   process.exit(0);
@@ -11,8 +11,8 @@ class Bindings {
     this.cfg = new Config('bindings.yaml');
     console.log(this.cfg.all());
 
-    this.setall();
-    Func['test']('Hello, World!');
+    //this.setall();
+    //Func['test']('Hello, World!');
   }
 
   setall() {

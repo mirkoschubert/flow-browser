@@ -9,10 +9,11 @@ const cfg = new configstore(pkg.name, {});
 cli.version(pkg.version);
 
 cli
-  .command('init')
-  .description('Initializes the project')
+  .command('test')
+  .description('Shortcut for testing')
   .action(() => {
-    console.log('Initializing');
+    console.log('testing...\n');
+    require('./app/test');
   });
 
 cli.parse(process.argv);
