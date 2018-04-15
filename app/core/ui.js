@@ -44,29 +44,57 @@ class UI {
 
   // Sets a new Tab with a new buffer/ webview
   newTab(url) {
-    if (this.currentTab > 0) this.boxes.webviews[this.currentTab - 1].hide();
-    this.currentTab++;
-    this.boxes.webviews.push(
-      UIElements.webview(Screen, 'Tab ' + String(this.currentTab) + ' - ' + url)
-    );
-    this.boxes.tabs.addItem(url === '' ? 'blank' : url);
-    this.boxes.tabs.select(this.currentTab - 1);
-    Screen.render();
-    console.log('Current Tab: ', this.currentTab);
+    if (this.boxes.webviews.length < 9) {
+      if (this.currentTab > 0) this.boxes.webviews[this.currentTab - 1].hide();
+      this.boxes.webviews.push(
+        UIElements.webview(
+          Screen,
+          'Tab ' + String(this.boxes.webviews.length + 1) + ' - ' + url
+        )
+      );
+      this.currentTab = this.boxes.webviews.length;
+      this.boxes.tabs.addItem(url === '' ? 'blank' : url);
+      this.boxes.tabs.select(this.currentTab);
+      Screen.render();
+    }
   }
 
   switchTab(id) {
-    this.boxes.webviews[this.currentTab - 1].hide();
-    this.boxes.webviews[id].show();
-    this.boxes.tabs.select(id);
-    this.currentTab = id + 1;
-    Screen.render();
+    if (id <= this.boxes.webviews.length) {
+      this.boxes.webviews[this.currentTab - 1].hide();
+      this.boxes.webviews[id - 1].show();
+      this.currentTab = id;
+      Screen.render();
+    }
   }
 
   // closes active tab and destroys the buffer instance
-  closeTab(id) {
-    console.log(this.boxes.tabs.options);
-    this.boxes.tabs.removeItem(id);
+  closeTab() {
+    if (this.boxes.webviews.length > 1) {
+      // Delete Webview and Tab
+      this.boxes.webviews[this.currentTab - 1].destroy();
+      this.boxes.webviews.splice(this.currentTab - 1, 1);
+      this.boxes.tabs.removeItem(this.boxes.tabs.items[this.currentTab - 1]);
+      // Fix the Prefix numbers of all tabs above
+      for (var i = this.currentTab - 1; i < this.boxes.tabs.items.length; i++) {
+        this.boxes.tabs.items[i].data.cmd.prefix = i + 1;
+        let t = Blessed.generateTags(
+          this.boxes.tabs.style.prefix || { fg: 'lightblack' }
+        );
+        this.boxes.tabs.items[i].content =
+          t.open +
+          this.boxes.tabs.items[i].data.cmd.prefix +
+          t.close +
+          ':' +
+          this.boxes.tabs.items[i].data.cmd.text;
+      }
+      // Show the Tab next to the last
+      this.currentTab =
+        this.currentTab == 1 ? this.currentTab : this.currentTab - 1;
+      this.boxes.webviews[this.currentTab - 1].show();
+
+      Screen.render();
+    }
   }
 }
 

@@ -13,7 +13,11 @@ Screen.key('t', () => {
 });
 
 Screen.key('x', () => {
-  ui.closeTab(1);
+  ui.closeTab();
+});
+
+Screen.key(['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'], (ch, key) => {
+  ui.switchTab(key.full);
 });
 
 ui.setMenuCommands({

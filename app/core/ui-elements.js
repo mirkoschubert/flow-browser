@@ -27,8 +27,8 @@ const tabs = screen => {
     height: 1,
     width: '100%',
     padding: {
-      left: 2,
-      right: 2
+      left: 1,
+      right: 1
     },
     keys: true,
     focusable: true,
@@ -39,6 +39,9 @@ const tabs = screen => {
       item: {
         fg: '#eee',
         bg: '#25467a'
+      },
+      prefix: {
+        fg: '#ff806c'
       },
       selected: {
         fg: '#fff',
