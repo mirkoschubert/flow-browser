@@ -74,14 +74,18 @@ class UI {
   }
 
   // closes active tab and destroys the buffer instance
-  closeTab() {
+  closeTab(id) {
+    id =
+      typeof id !== 'undefined' || (id < 1 && id <= this.boxes.webviews.length)
+        ? id
+        : this.currentTab;
     if (this.boxes.webviews.length > 1) {
       // Delete Webview and Tab
-      this.boxes.webviews[this.currentTab - 1].destroy();
-      this.boxes.webviews.splice(this.currentTab - 1, 1);
-      this.boxes.tabs.removeItem(this.boxes.tabs.items[this.currentTab - 1]);
+      this.boxes.webviews[id - 1].destroy();
+      this.boxes.webviews.splice(id - 1, 1);
+      this.boxes.tabs.removeItem(this.boxes.tabs.items[id - 1]);
       // Fix the Prefix numbers of all tabs above
-      for (var i = this.currentTab - 1; i < this.boxes.tabs.items.length; i++) {
+      for (var i = id - 1; i < this.boxes.tabs.items.length; i++) {
         this.boxes.tabs.items[i].data.cmd.prefix = i + 1;
         let t = Blessed.generateTags(
           this.boxes.tabs.style.prefix || { fg: 'lightblack' }
@@ -99,6 +103,12 @@ class UI {
       this.boxes.webviews[this.currentTab - 1].show();
 
       Screen.render();
+    }
+  }
+
+  closeAllTabs() {
+    for (let i = this.boxes.webviews.length; i > 0; i--) {
+      this.closeTab(i);
     }
   }
 }

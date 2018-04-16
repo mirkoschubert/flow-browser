@@ -6,18 +6,11 @@ const UI = require('./core/ui');
 const Bindings = require('./core/bindings');
 
 let ui = new UI();
-let bindings = new Bindings();
+let bindings = new Bindings(ui);
 
 ui.setMenuCommands(bindings.getMenuBindings());
 
-Screen.key('t', () => {
-  ui.newTab('');
-});
-
-Screen.key('x', () => {
-  ui.closeTab();
-});
-
-Screen.key(['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'], (ch, key) => {
-  ui.switchTab(key.full);
+// debug keys
+Screen.on('keypress', (ch, key) => {
+  //console.log(key);
 });

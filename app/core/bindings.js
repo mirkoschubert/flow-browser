@@ -1,21 +1,15 @@
 const Screen = require('./screen');
 const Config = require('./config');
 const Commands = require('./commands');
-//const Func = require('./functions');
-
-Screen.key(['C-c', 'q', 'Q'], () => {
-  process.exit(0);
-});
 
 class Bindings {
-  constructor() {
+  constructor(ui) {
     this.cfg = new Config('bindings.yaml');
     this.bindings = this.cfg.all();
-    this.cmd = new Commands();
+    this.cmd = new Commands(ui);
     console.log(this.bindings);
 
-    //this.setall();
-    //Func['test']('Hello, World!');
+    this.setAllBindings();
   }
 
   // returns a sorted array of binding objects
@@ -27,14 +21,29 @@ class Bindings {
         bind[this.bindings[cmd].menu.weight - 1] = this.bindings[cmd];
       }
     }
-    console.log(bind);
     return bind;
   }
 
-  setall() {
-    let bindings = this.cfg.all();
-    for (let command in bindings) {
+  setAllBindings() {
+    for (let func in this.bindings) {
+      Screen.key(this.bindings[func].keys, (ch, key) => {
+        this.cmd.openCommand({
+          function: func,
+          command: this.bindings[func].command,
+          args: func == 'select_tab' ? { num: key.full } : {},
+          needsargs:
+            typeof this.bindings[func].args !== 'undefined' &&
+            func != 'select_tab'
+              ? this.bindings[func].args
+              : false,
+          silent: typeof this.bindings[func].menu !== 'undefined'
+        });
+      });
     }
+    // prompt binding
+    Screen.key(':', () => {
+      console.log('prompt opened.');
+    });
   }
 }
 

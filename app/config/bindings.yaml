@@ -39,7 +39,7 @@ close_active_tab:
     name: close tab
     weight: 5
 close_all_tabs:
-  keys: X
+  keys: S-x
   command: ':closeall'
   description: Closes all tabs and opens a new empty one
 help:
