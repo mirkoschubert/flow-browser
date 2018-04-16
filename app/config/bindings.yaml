@@ -5,31 +5,62 @@ quit:
     - C-c
   command: ':quit'
   description: Closes the browser
-  inmenu: true
+  menu:
+    name: quit
+    weight: 1
 test:
   keys: a
   command: ':test'
   description: Function test
-  inmenu: false
+  menu:
+    name: test
+    weight: 2
 open_url:
   keys: o
   command: ':open'
   args: url
   description: Opens a new url in the active tab
-  inmenu: true
+  menu:
+    name: open
+    weight: 3
 open_new_tab:
   keys: t
   command: ':tab'
   args: url
   description: Opens a new tab with a given url
-  inmenu: true
+  menu:
+    name: open tab
+    weight: 4
 close_active_tab:
   keys: x
   command: ':close'
   description: Closes the active tab
-  inmenu: true
+  menu:
+    name: close tab
+    weight: 5
 close_all_tabs:
   keys: X
   command: ':closeall'
   description: Closes all tabs and opens a new empty one
-  inmenu: false
+help:
+  keys: '?'
+  command: ':help'
+  args: topic
+  description: Opens the help pages in a new tab
+  menu:
+    name: help
+    weight: 6
+select_tab:
+  keys:
+    - '1'
+    - '2'
+    - '3'
+    - '4'
+    - '5'
+    - '6'
+    - '7'
+    - '8'
+    - '9'
+  command: ':tab'
+  args: num
+  description: Switch to tab with the number

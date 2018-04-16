@@ -8,6 +8,8 @@ const Bindings = require('./core/bindings');
 let ui = new UI();
 let bindings = new Bindings();
 
+ui.setMenuCommands(bindings.getMenuBindings());
+
 Screen.key('t', () => {
   ui.newTab('');
 });
@@ -18,12 +20,4 @@ Screen.key('x', () => {
 
 Screen.key(['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'], (ch, key) => {
   ui.switchTab(key.full);
-});
-
-ui.setMenuCommands({
-  q: 'quit',
-  o: 'open',
-  t: 'new tab',
-  x: 'close tab',
-  '?': 'help'
 });

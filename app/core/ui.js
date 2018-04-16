@@ -9,8 +9,7 @@ class UI {
     this.currentTab = 0;
     this.initBoxes();
 
-    this.newTab('google.com'); // first Tab
-    this.newTab('facebook.com');
+    this.newTab(); // first Tab
   }
 
   initBoxes() {
@@ -33,10 +32,14 @@ class UI {
 
   setMenuCommands(commands) {
     let content = '';
-    for (let key in commands) {
-      content += `{white-fg}${key}{/white-fg}{#c0bfc0-fg}:${
-        commands[key]
-      }{/#c0bfc0-fg}  `;
+    for (let i in commands) {
+      // take the first key
+      let key =
+        typeof commands[i].keys === 'object'
+          ? commands[i].keys[0]
+          : commands[i].keys;
+      let cmd = commands[i].menu.name;
+      content += `{white-fg}${key}{/white-fg}{#c0bfc0-fg}:${cmd}{/#c0bfc0-fg}  `;
     }
     this.boxes.menu.setContent(content);
     Screen.render();
@@ -53,7 +56,9 @@ class UI {
         )
       );
       this.currentTab = this.boxes.webviews.length;
-      this.boxes.tabs.addItem(url === '' ? 'blank' : url);
+      this.boxes.tabs.addItem(
+        typeof url === 'undefined' || url === '' ? 'blank' : url
+      );
       this.boxes.tabs.select(this.currentTab);
       Screen.render();
     }
