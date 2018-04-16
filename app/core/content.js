@@ -1,6 +1,6 @@
 const Blessed = require('blessed');
 const Screen = require('./screen');
-const cliui = require('cliui')({ width: Screen.width, wrap: true });
+const Cliui = require('cliui');
 const Config = require('./config');
 
 class Content {
@@ -28,6 +28,7 @@ class Content {
 
   // internal help page
   _help() {
+    let cliui = new Cliui({ width: Screen.width, wrap: true });
     cliui.div(`{bold}This is the {blue-fg}HELP{/blue-fg} document!{/bold}\n\n`);
     cliui.div(
       { text: Blessed.parseTags(`{bold}Key{/bold}`), width: 10 },

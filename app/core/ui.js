@@ -11,8 +11,6 @@ class UI {
     this.currentTab = 0;
     this.initBoxes();
 
-    console.log('test');
-
     this.newTab(); // first Tab
   }
 
@@ -43,10 +41,7 @@ class UI {
     let content = '';
     for (let i in commands) {
       // take the first key
-      let key =
-        typeof commands[i].keys === 'object'
-          ? commands[i].keys[0]
-          : commands[i].keys;
+      let key = typeof commands[i].keys === 'object' ? commands[i].keys[0] : commands[i].keys;
       let cmd = commands[i].menu.name;
       content += `{white-fg}${key}{/white-fg}{#c0bfc0-fg}:${cmd}{/#c0bfc0-fg}  `;
     }
@@ -83,10 +78,11 @@ class UI {
       let title,
         content = '';
       if (typeof url !== 'undefined' || url === '') {
-        title =
+        /* title =
           url.charAt(0) == ':'
             ? (title = url.substr(1))
-            : (title = new URL(url).hostname);
+            : (title = new URL(url).hostname); */
+        title = url.charAt(0) == ':' ? url.substr(1) : url;
         content = '{red-fg}' + url + '{/red-fg}';
       } else {
         title = 'blank';
@@ -124,10 +120,7 @@ class UI {
    * @param {int} id
    */
   closeTab(id) {
-    id =
-      typeof id !== 'undefined' || (id < 1 && id <= this.boxes.webviews.length)
-        ? id
-        : this.currentTab;
+    id = typeof id !== 'undefined' || (id < 1 && id <= this.boxes.webviews.length) ? id : this.currentTab;
     if (this.boxes.webviews.length > 1) {
       // Delete Webview and Tab
       this.boxes.webviews[id - 1].destroy();
@@ -136,19 +129,12 @@ class UI {
       // Fix the Prefix numbers of all tabs above
       for (var i = id - 1; i < this.boxes.tabs.items.length; i++) {
         this.boxes.tabs.items[i].data.cmd.prefix = i + 1;
-        let t = Blessed.generateTags(
-          this.boxes.tabs.style.prefix || { fg: 'lightblack' }
-        );
+        let t = Blessed.generateTags(this.boxes.tabs.style.prefix || { fg: 'lightblack' });
         this.boxes.tabs.items[i].content =
-          t.open +
-          this.boxes.tabs.items[i].data.cmd.prefix +
-          t.close +
-          ':' +
-          this.boxes.tabs.items[i].data.cmd.text;
+          t.open + this.boxes.tabs.items[i].data.cmd.prefix + t.close + ':' + this.boxes.tabs.items[i].data.cmd.text;
       }
       // Show the Tab next to the last
-      this.currentTab =
-        this.currentTab == 1 ? this.currentTab : this.currentTab - 1;
+      this.currentTab = this.currentTab == 1 ? this.currentTab : this.currentTab - 1;
       this.boxes.webviews[this.currentTab - 1].show();
 
       Screen.render();
@@ -166,11 +152,7 @@ class UI {
 
   prompt(command) {
     if (!this.boxes.message.hidden) this.boxes.message.hide();
-    this.boxes.prompt.setValue(
-      typeof command !== 'undefined' && command.charAt(0) == ':'
-        ? command + ' '
-        : ':'
-    );
+    this.boxes.prompt.setValue(typeof command !== 'undefined' && command.charAt(0) == ':' ? command + ' ' : ':');
     this.boxes.prompt.show();
     this.boxes.prompt.focus();
     return new Promise((resolve, reject) => {

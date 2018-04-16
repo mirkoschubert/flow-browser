@@ -11,6 +11,9 @@ quit:
 test:
   keys: a
   command: ':test'
+  args:
+    - this
+    - that
   description: Function test
   menu:
     name: test
