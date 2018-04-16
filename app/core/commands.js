@@ -15,35 +15,40 @@ class Commands {
   }
 
   test() {
-    console.log('TEST');
+    this.ui.message('This is a simple test.');
   }
 
   quit() {
     process.exit(0);
   }
 
+  open_url() {
+    this.ui.message('Nothing to open!', 'error');
+    this.ui.setTabContent('Update in Tab 2', 2);
+  }
+
   open_new_tab() {
-    //console.log('New tab opened.');
+    this.ui.message('New tab opened.', 'warning');
     this.ui.newTab();
   }
 
   close_active_tab() {
-    //console.log('Active tab closed.');
+    this.ui.message('Active tab closed.', 'ok');
     this.ui.closeTab();
   }
 
   close_all_tabs() {
-    //console.log('All tabs closed.');
+    this.ui.message('All tabs closed.', 'ok');
     this.ui.closeAllTabs();
   }
 
   select_tab(args) {
-    //console.log('Switch to tab ', args.num);
+    this.ui.message('Switch to tab ' + args.num);
     this.ui.switchTab(args.num);
   }
 
   help() {
-    console.log('Help opened.');
+    this.ui.message('Help opened.', 'ok');
   }
 }
 

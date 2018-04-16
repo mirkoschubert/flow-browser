@@ -9,6 +9,8 @@ class UI {
     this.currentTab = 0;
     this.initBoxes();
 
+    console.log('test');
+
     this.newTab(); // first Tab
   }
 
@@ -18,6 +20,7 @@ class UI {
     this.boxes.webviews = [];
     this.boxes.menu = UIElements.menu(Screen);
     this.boxes.prompt = UIElements.prompt(Screen);
+    this.boxes.message = UIElements.message(Screen);
 
     for (let box in this.boxes) {
       if (box !== 'webviews') {
@@ -43,6 +46,18 @@ class UI {
     }
     this.boxes.menu.setContent(content);
     Screen.render();
+  }
+
+  setTabContent(content, id) {
+    content = content || 'Nothing found.';
+    id = id || this.currentTab;
+
+    if (typeof this.boxes.webviews[id - 1] !== 'undefined') {
+      this.boxes.webviews[id - 1].setContent(content);
+      Screen.render();
+    } else {
+      this.message('Tab ' + id + ' not found.', 'error');
+    }
   }
 
   // Sets a new Tab with a new buffer/ webview
@@ -110,6 +125,36 @@ class UI {
     for (let i = this.boxes.webviews.length; i > 0; i--) {
       this.closeTab(i);
     }
+  }
+
+  // shows the log in the prompt line
+  message(content, type) {
+    content = content || '';
+    type = type || 'message';
+
+    switch (type) {
+      case 'ok':
+        this.boxes.message.style.fg = 'lightgreen';
+        break;
+      case 'warning':
+        this.boxes.message.style.fg = 'lightyellow';
+        break;
+      case 'error':
+        this.boxes.message.style.fg = 'lightred';
+        break;
+
+      default:
+        this.boxes.message.style.fg = 'white';
+        break;
+    }
+
+    this.boxes.message.setContent(content);
+    this.boxes.message.show();
+    Screen.render();
+    /* setTimeout(() => {
+      this.boxes.message.hide();
+      Screen.render();
+    }, 10000); */
   }
 }
 

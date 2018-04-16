@@ -120,4 +120,28 @@ const prompt = screen => {
   });
 };
 
-module.exports = { header, tabs, webview, menu, prompt };
+const message = screen => {
+  return Blessed.text({
+    parent: screen,
+    bottom: 0,
+    height: 1,
+    width: '100%',
+    tags: true,
+    hidden: true,
+    padding: {
+      left: 2,
+      right: 2
+    },
+    style: {
+      fg: 'white',
+      bold: true,
+      focus: {
+        fg: 'red',
+        bg: 'transparent'
+      }
+    },
+    content: 'MESSAGE'
+  });
+};
+
+module.exports = { header, tabs, webview, menu, prompt, message };
