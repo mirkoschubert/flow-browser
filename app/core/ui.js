@@ -1,6 +1,8 @@
 const Blessed = require('blessed');
+const URL = require('url');
 const Screen = require('./screen');
 const UIElements = require('./ui-elements');
+const Content = require('./content');
 
 class UI {
   constructor() {
@@ -64,19 +66,31 @@ class UI {
   newTab(url) {
     if (this.boxes.webviews.length < 9) {
       if (this.currentTab > 0) this.boxes.webviews[this.currentTab - 1].hide();
-      this.boxes.webviews.push(
-        UIElements.webview(
-          Screen,
-          'Tab ' + String(this.boxes.webviews.length + 1) + ' - ' + url
-        )
-      );
+      // prepare title & content
+      let title,
+        content = '';
+      if (typeof url !== 'undefined' || url === '') {
+        title =
+          url.charAt(0) == ':'
+            ? (title = url.substr(1))
+            : (title = new URL(url).hostname);
+        content = '{red-fg}' + url + '{/red-fg}';
+      } else {
+        title = 'blank';
+        let ct = new Content(this);
+        content = ct.getInternalPage(':blank');
+      }
+
+      this.boxes.webviews.push(UIElements.webview(Screen, content));
       this.currentTab = this.boxes.webviews.length;
-      this.boxes.tabs.addItem(
-        typeof url === 'undefined' || url === '' ? 'blank' : url
-      );
+      this.boxes.tabs.addItem(title);
       this.boxes.tabs.select(this.currentTab);
+      this.boxes.webviews[this.currentTab - 1].focus();
       Screen.render();
+    } else {
+      this.message('You only can use 9 Tabs!', 'warning');
     }
+    return this.currentTab;
   }
 
   switchTab(id) {

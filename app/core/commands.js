@@ -1,6 +1,9 @@
+const Content = require('./content');
+
 class Commands {
   constructor(ui) {
     this.ui = ui;
+    this.content = new Content(ui);
   }
 
   openCommand(options) {
@@ -24,7 +27,7 @@ class Commands {
 
   open_url() {
     this.ui.message('Nothing to open!', 'error');
-    this.ui.setTabContent('Update in Tab 2', 2);
+    this.ui.setTabContent('Update');
   }
 
   open_new_tab() {
@@ -49,6 +52,8 @@ class Commands {
 
   help() {
     this.ui.message('Help opened.', 'ok');
+    let id = this.ui.newTab(':help');
+    this.ui.setTabContent(this.content.getInternalPage(':help'), id);
   }
 }
 
