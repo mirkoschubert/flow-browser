@@ -110,7 +110,10 @@ const prompt = screen => {
     width: '100%',
     tags: true,
     keys: true,
-    padding: 0,
+    padding: {
+      left: 2,
+      right: 2
+    },
     style: {
       fg: '#fff',
       focus: {

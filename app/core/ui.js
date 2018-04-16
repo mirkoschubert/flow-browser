@@ -35,6 +35,10 @@ class UI {
     Screen.render();
   }
 
+  /**
+   * Set the key bindings for the menu
+   * @param {Array} commands
+   */
   setMenuCommands(commands) {
     let content = '';
     for (let i in commands) {
@@ -50,6 +54,11 @@ class UI {
     Screen.render();
   }
 
+  /**
+   * Sets a new content for a specific tab
+   * @param {string} content
+   * @param {int} id
+   */
   setTabContent(content, id) {
     content = content || 'Nothing found.';
     id = id || this.currentTab;
@@ -62,7 +71,11 @@ class UI {
     }
   }
 
-  // Sets a new Tab with a new buffer/ webview
+  /**
+   * Sets a new tab with title and content
+   * @param {string} url
+   * @returns {int} id of new current tab
+   */
   newTab(url) {
     if (this.boxes.webviews.length < 9) {
       if (this.currentTab > 0) this.boxes.webviews[this.currentTab - 1].hide();
@@ -93,6 +106,10 @@ class UI {
     return this.currentTab;
   }
 
+  /**
+   * Switches to the Tab with the given id
+   * @param {int} id
+   */
   switchTab(id) {
     if (id <= this.boxes.webviews.length) {
       this.boxes.webviews[this.currentTab - 1].hide();
@@ -102,7 +119,10 @@ class UI {
     }
   }
 
-  // closes active tab and destroys the buffer instance
+  /**
+   * Closes the current or specified Tab and destroys the buffer instance
+   * @param {int} id
+   */
   closeTab(id) {
     id =
       typeof id !== 'undefined' || (id < 1 && id <= this.boxes.webviews.length)
@@ -135,13 +155,42 @@ class UI {
     }
   }
 
+  /**
+   * Closes all Tabs (it keeps one open)
+   */
   closeAllTabs() {
     for (let i = this.boxes.webviews.length; i > 0; i--) {
       this.closeTab(i);
     }
   }
 
-  // shows the log in the prompt line
+  prompt(command) {
+    if (!this.boxes.message.hidden) this.boxes.message.hide();
+    this.boxes.prompt.setValue(
+      typeof command !== 'undefined' && command.charAt(0) == ':'
+        ? command + ' '
+        : ':'
+    );
+    this.boxes.prompt.show();
+    this.boxes.prompt.focus();
+    return new Promise((resolve, reject) => {
+      this.boxes.prompt.readInput((err, val) => {
+        if (err) {
+          reject(err);
+        }
+        this.boxes.prompt.setContent('');
+        this.boxes.prompt.hide();
+        this.boxes.webviews[this.currentTab - 1].focus();
+        resolve(val);
+      });
+    });
+  }
+
+  /**
+   * Show the log in the prompt line
+   * @param {string} content
+   * @param {string} type [message, ok, warning, error]
+   */
   message(content, type) {
     content = content || '';
     type = type || 'message';
@@ -165,10 +214,6 @@ class UI {
     this.boxes.message.setContent(content);
     this.boxes.message.show();
     Screen.render();
-    /* setTimeout(() => {
-      this.boxes.message.hide();
-      Screen.render();
-    }, 10000); */
   }
 }
 

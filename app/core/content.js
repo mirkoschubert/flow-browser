@@ -1,4 +1,6 @@
 const Blessed = require('blessed');
+const Screen = require('./screen');
+const cliui = require('cliui')({ width: Screen.width, wrap: true });
 const Config = require('./config');
 
 class Content {
@@ -9,18 +11,14 @@ class Content {
   }
 
   getInternalPage(cmd) {
-    return cmd.charAt(0) == ':'
-      ? this['_' + cmd.substr(1)]()
-      : this['_' + cmd]();
+    return cmd.charAt(0) == ':' ? this['_' + cmd.substr(1)]() : this['_' + cmd]();
   }
 
   // internal blank page
   _blank() {
     let output = '';
-    output +=
-      '{bold}Welcome to the {blue-fg}FLOW BROWSER{/blue-fg}!{/bold}\n\n';
-    output +=
-      'To open a website please press {green-fg}o{/green-fg} and type the url in the prompt.\n';
+    output += '{bold}Welcome to the {blue-fg}FLOW BROWSER{/blue-fg}!{/bold}\n\n';
+    output += 'To open a website please press {green-fg}o{/green-fg} and type the url in the prompt.\n';
     output +=
       'You can also use the command {green-fg}:open [url]{/green-fg} in the prompt. To open the command prompt simply press the {green-fg}:{/green-fg} key.\n\n';
     output += 'Have fun using the FLOW BROWSER!';
@@ -30,36 +28,41 @@ class Content {
 
   // internal help page
   _help() {
-    let output =
-      '{bold}This is the {blue-fg}HELP{/blue-fg} document!{/bold}\n\n';
-
+    cliui.div(`{bold}This is the {blue-fg}HELP{/blue-fg} document!{/bold}\n\n`);
+    cliui.div(
+      { text: Blessed.parseTags(`{bold}Key{/bold}`), width: 10 },
+      { text: Blessed.parseTags(`{bold}Command{/bold}`), width: 15 },
+      { text: Blessed.parseTags(`{bold}Arguments{/bold}`), width: 15 },
+      { text: Blessed.parseTags(`{bold}Description{/bold}`) }
+    );
     for (let func in this.cfg.bindings) {
       if (typeof this.cfg.bindings[func].keys === 'object') {
         for (let key in this.cfg.bindings[func].keys) {
-          output += '{bold}{green-fg}';
-          output += this.cfg.bindings[func].keys[key];
-          output += '\t\t\t';
-          output +=
-            this.cfg.bindings[func].command == ':tab'
-              ? this.cfg.bindings[func].command +
-                ' ' +
-                this.cfg.bindings[func].keys[key]
-              : this.cfg.bindings[func].command;
-          output += '{/green-fg}{/bold}\t\t\t';
-          output += this.cfg.bindings[func].description;
-          output += '\n';
+          let k = this.cfg.bindings[func].keys[key];
+          let c = this.cfg.bindings[func].command;
+          let a = typeof this.cfg.bindings[func].args !== 'undefined' ? '[' + this.cfg.bindings[func].args + ']' : '';
+          let d = this.cfg.bindings[func].description;
+          cliui.div(
+            { text: Blessed.parseTags(`{bold}{green-fg}${k}{/green-fg}{/bold}`), width: 10 },
+            { text: Blessed.parseTags(`{yellow-fg}${c}{/yellow-fg}`), width: 15 },
+            { text: Blessed.parseTags(`{yellow-fg}${a}{/yellow-fg}`), width: 15 },
+            { text: Blessed.parseTags(`${d}`) }
+          );
         }
       } else {
-        output += '{bold}{green-fg}';
-        output += this.cfg.bindings[func].keys;
-        output += '\t\t\t';
-        output += this.cfg.bindings[func].command;
-        output += '{/green-fg}{/bold}\t\t\t';
-        output += this.cfg.bindings[func].description;
-        output += '\n';
+        let k = this.cfg.bindings[func].keys;
+        let c = this.cfg.bindings[func].command;
+        let a = typeof this.cfg.bindings[func].args !== 'undefined' ? '[' + this.cfg.bindings[func].args + ']' : '';
+        let d = this.cfg.bindings[func].description;
+        cliui.div(
+          { text: Blessed.parseTags(`{bold}{green-fg}${k}{/green-fg}{/bold}`), width: 10 },
+          { text: Blessed.parseTags(`{yellow-fg}${c}{/yellow-fg}`), width: 15 },
+          { text: Blessed.parseTags(`{yellow-fg}${a}{/yellow-fg}`), width: 15 },
+          { text: Blessed.parseTags(`${d}`) }
+        );
       }
     }
-    return output;
+    return cliui.toString();
   }
 }
 

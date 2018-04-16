@@ -4,6 +4,7 @@ const Commands = require('./commands');
 
 class Bindings {
   constructor(ui) {
+    this.ui = ui;
     this.cfg = new Config('bindings.yaml');
     this.bindings = this.cfg.all();
     this.cmd = new Commands(ui);
@@ -42,7 +43,14 @@ class Bindings {
     }
     // prompt binding
     Screen.key(':', () => {
-      console.log('prompt opened.');
+      this.ui
+        .prompt()
+        .then(val => {
+          this.ui.message(val);
+        })
+        .catch(e => {
+          console.error(e);
+        });
     });
   }
 }
